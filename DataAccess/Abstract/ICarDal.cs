@@ -8,15 +8,15 @@ namespace DataAccess.Abstract
 
     //interfacein kendisi public değil ama operasyonları publictir.
     //Ondan public yazmadık.
-    public interface ICarDal
+    public interface ICarDal:IEntityRepository<Car>
     {
-        List<Car> GetAll();
+        //List<Car> GetAll();
 
-        void Add(Car car);
-        void Update(Car car);
-        void Delete(Car car);
+        //void Add(Car car);
+        //void Update(Car car);
+        //void Delete(Car car);
 
-        Car GetById(int carId);
+        //Car GetById(int carId);
 
     }
 }

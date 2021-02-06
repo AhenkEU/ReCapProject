@@ -3,11 +3,13 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace DataAccess.Concrete.InMemory
 {
-    public class InMemoryCarDal : ICarDal
+    //public class InMemoryCarDal : ICarDal
+      public class InMemoryCarDal
     {
         List<Car> _cars; //global değişken
         public InMemoryCarDal()
@@ -26,23 +28,30 @@ namespace DataAccess.Concrete.InMemory
             _cars.Add(car);
         }
 
-        public void Delete(Car car)            
+        public void Delete(Car car)
         {
-            Car carToDelete = _cars.SingleOrDefault(c=>c.Id==car.Id);
+            Car carToDelete = _cars.SingleOrDefault(c => c.Id == car.Id);
             //_carsı tek tek dolaşıp her c için yolladığım carın idsi eşit mi diye bakıyor.
             //Single sonuçlu bir foreach döngüsü
 
             _cars.Remove(carToDelete);
         }
 
+        public Car Get(Expression<Func<Car, bool>> filter)
+        {
+            throw new NotImplementedException();
+        }
 
         public List<Car> GetAll()
         {
             return _cars;
         }
 
+
+
         public Car GetById(int carId)
         {
+
             Car carToGetById = _cars.SingleOrDefault(c => c.Id == carId);
 
             return carToGetById;
