@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -18,54 +20,61 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
             if (car.DailyPrice > 0 && (car.Description).Length >= 2)
+            {
                 _carDal.Add(car);
-            else
-                Console.WriteLine("Araba eklenmesi için fiyat 0'dan büyük ve isim iki karakterden uzun olmalıdır.");
+                return new SuccessResult(Messages.CarAdded);
+            }
+            
+                return new ErrorResult( Messages.CarNameInvalid);
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
             _carDal.Delete(car);
+            return new SuccessResult(Messages.CarDeleted);
+
+
+        }
+
+        public IDataResult <List<Car>> GetAll()
+        {
+
+            return new SuccessDataResult<List<Car>> (_carDal.GetAll(), Messages.CarsListed);
             
-
         }
 
-        public List<Car> GetAll()
+        public IDataResult <Car> GetById(int carId) {
+            return new SuccessDataResult <Car> (_carDal.Get(c => c.Id == carId));
+        }
+
+        public  IDataResult <List<CarDetailDto>> GetCarDetails()
         {
-            return _carDal.GetAll();
-            
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());    
         }
 
-        public Car GetById(int carId) {
-            return _carDal.Get(c => c.Id == carId);
-        }
-
-        public List<CarDetailDto> GetCarDetails()
+        public IDataResult<List<Car>> GetCarsByBrandId(int id)
         {
-            return _carDal.GetCarDetails();    
+            return new SuccessDataResult<List<Car>> (_carDal.GetAll(c => c.BrandId == id));
         }
 
-        public List<Car> GetCarsByBrandId(int id)
+        public IDataResult<List<Car>> GetCarsByColorId(int id)
         {
-            return _carDal.GetAll(c => c.BrandId == id);
+            return new SuccessDataResult<List<Car>> (_carDal.GetAll(c => c.ColorId == id));
         }
 
-        public List<Car> GetCarsByColorId(int id)
-        {
-            return _carDal.GetAll(c => c.ColorId == id);
-        }
-
-        public void Update(Car car)
+        public IResult Update(Car car)
         {
             if (car.DailyPrice > 0 && (car.Description).Length>=2) 
             {
                 _carDal.Update(car);
+                return new SuccessResult(Messages.CarUpdated);
+
             }
             else
-                Console.WriteLine("Bilgi güncellenmesi için fiyat 0'dan büyük ve isim iki karakterden uzun olmalıdır.");
+                return new SuccessResult(Messages.CarNameInvalid);
 
         }
     }
